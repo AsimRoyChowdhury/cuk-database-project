@@ -1,0 +1,30 @@
+{
+  "name": "@repo/backend",
+  "version": "1.0.0",
+  "description": "Hono API backend",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hono/node-server": "^1.11.4",
+    "@hono/zod-validator": "^0.2.2",
+    "@lucia-auth/adapter-prisma": "^4.0.1",
+    "@repo/database": "workspace:*",
+    "argon2-wasm": "^2.3.0",
+    "hono": "^4.4.7",
+    "lucia": "^3.2.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.5"
+  }
+}
+

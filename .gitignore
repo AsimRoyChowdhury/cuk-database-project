@@ -1,0 +1,28 @@
+# Node
+node_modules
+
+# NPX
+.npm
+
+# PNPM
+pnpm-lock.yaml
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Next.js
+.next/
+out/
+
+# VSCode
+.vscode
+
+# Prisma
+# We want to commit the schema, but not the .env
+packages/database/.env
+
+# Build outputs
+dist
+

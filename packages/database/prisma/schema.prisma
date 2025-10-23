@@ -1,0 +1,137 @@
+    datasource db {
+      provider = "postgresql"
+      url      = env("DATABASE_URL")
+    }
+    
+    generator client {
+      provider = "prisma-client-js"
+    }
+    
+    
+    model User {
+      id           String    @id @default(uuid())
+      name         String
+      email        String    @unique
+      hashedPassword String
+      role         UserRole
+      
+      // Optional link to a department, only for HODs
+      departmentId String?   @map("department_id")
+      Department   Department? @relation(fields: [departmentId], references: [id])
+      
+      // Auth sessions
+      sessions     Session[]
+      
+      // Logs
+      logs         ActivityLog[]
+    }
+    
+    model Session {
+      id        String   @id
+      expiresAt DateTime
+      userId    String   @map("user_id")
+      user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    }
+    
+    
+    model AnnualDepartmentStats {
+      id             String       @id @default(uuid())
+      departmentId   String       @map("department_id")
+      academicYearId String       @map("academic_year_id")
+      studentLevel   StudentLevel
+    
+      // Admitted Counts
+      male_total         Int @default(0)
+      male_general       Int @default(0)
+      male_sc            Int @default(0)
+      male_st            Int @default(0)
+      male_obc           Int @default(0)
+      male_ews           Int @default(0)
+      male_ph            Int @default(0)
+      male_foreign       Int @default(0)
+      male_ex_defence    Int @default(0)
+      female_total       Int @default(0)
+      female_general     Int @default(0)
+      female_sc          Int @default(0)
+      female_st          Int @default(0)
+      female_obc         Int @default(0)
+      female_ews         Int @default(0)
+      female_ph          Int @default(0)
+      female_foreign     Int @default(0)
+      female_ex_defence  Int @default(0)
+    
+      // Actual Category Counts
+      actual_cat_general Int @default(0)
+      actual_cat_sc      Int @default(0)
+      actual_cat_st      Int @default(0)
+      actual_cat_obc     Int @default(0)
+      actual_cat_ews     Int @default(0)
+    
+      // Other Stats
+      admitted_cuet      Int @default(0)
+      admitted_spot      Int @default(0)
+      minority_muslim    Int @default(0)
+      minority_christian Int @default(0)
+      dropouts           Int @default(0)
+      scholarships       Int @default(0)
+    
+      createdAt      DateTime     @default(now())
+      updatedAt      DateTime     @updatedAt
+      
+      Department     Department   @relation(fields: [departmentId], references: [id])
+      AcademicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+    
+      @@unique([departmentId, academicYearId, studentLevel])
+    }
+    
+    model Department {
+      id   String @id @default(uuid())
+      name String @unique
+    
+      stats AnnualDepartmentStats[]
+      hods  User[] 
+    }
+    
+    model AcademicYear {
+      id   String @id @default(uuid())
+      year String @unique 
+    
+      stats AnnualDepartmentStats[]
+    }
+    
+    
+    model ActivityLog {
+      id            String     @id @default(uuid())
+      timestamp     DateTime   @default(now())
+      actionType    ActionType
+      tableName     String
+      recordId      String
+      changeDetails Json?      
+      
+      userId        String
+      user          User       @relation(fields: [userId], references: [id])
+    }
+    
+    
+    enum UserRole {
+      SUPER_ADMIN
+      ADMIN
+      HOD
+    }
+    
+    enum StudentLevel {
+      PG
+      UG
+      PHD
+      ITEP
+    }
+    
+    enum ActionType {
+      CREATE
+      UPDATE
+      DELETE
+      USER_LOGIN
+      USER_LOGOUT
+      USER_CREATED
+    }
+    
