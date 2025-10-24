@@ -6,7 +6,7 @@
   "scripts": {
     "dev:backend": "pnpm --filter @repo/backend dev",
     "dev:frontend": "pnpm --filter @repo/frontend dev",
-    "dev": "pnpm run dev:backend & pnpm run dev:frontend",
+    "dev": "npx concurrently \"pnpm:dev:backend\" \"pnpm:dev:frontend\"",
     "db:generate": "pnpm --filter @repo/database db:generate",
     "db:migrate": "pnpm --filter @repo/database db:migrate",
     "db:studio": "pnpm --filter @repo/database db:studio"
